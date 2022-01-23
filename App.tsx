@@ -16,6 +16,9 @@ import {
 
 import { ThemeProvider } from 'styled-components/native';
 import theme from './src/styles/theme';
+import { CarDetails } from './src/screens/CarDetails';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Agendamentos } from './src/screens/Agendamentos';
 
 
 export default function App() {
@@ -34,7 +37,15 @@ export default function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Home />
+      <GestureHandlerRootView
+        style={
+          {
+            flex: 1
+          }
+        }
+      >
+        <Agendamentos />
+      </GestureHandlerRootView>
     </ThemeProvider>
   );
 }
