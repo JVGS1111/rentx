@@ -19,6 +19,8 @@ import theme from './src/styles/theme';
 import { CarDetails } from './src/screens/CarDetails';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Agendamentos } from './src/screens/Agendamentos';
+import { AgendamentoDetails } from './src/screens/AgendamentoDetails';
+import { AgendamentoComplete } from './src/screens/AgendamentoComplete';
 
 
 export default function App() {
@@ -44,7 +46,7 @@ export default function App() {
           }
         }
       >
-        <Agendamentos />
+        <AgendamentoComplete />
       </GestureHandlerRootView>
     </ThemeProvider>
   );
