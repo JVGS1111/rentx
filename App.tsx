@@ -1,8 +1,9 @@
+import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import AppLoading from 'expo-app-loading';
 
-import { Home } from './src/screens/Home';
+
 import {
   useFonts,
   Inter_400Regular,
@@ -16,11 +17,9 @@ import {
 
 import { ThemeProvider } from 'styled-components/native';
 import theme from './src/styles/theme';
-import { CarDetails } from './src/screens/CarDetails';
+
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Agendamentos } from './src/screens/Agendamentos';
-import { AgendamentoDetails } from './src/screens/AgendamentoDetails';
-import { AgendamentoComplete } from './src/screens/AgendamentoComplete';
+import { Routes } from './src/routes';
 
 
 export default function App() {
@@ -46,7 +45,7 @@ export default function App() {
           }
         }
       >
-        <AgendamentoComplete />
+        <Routes />
       </GestureHandlerRootView>
     </ThemeProvider>
   );

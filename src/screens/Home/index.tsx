@@ -1,22 +1,50 @@
 
-import { StatusBar } from 'react-native';
-import { Containter, Header, TotalCars, HeaderContent, CarList } from './styles';
+import { StatusBar, ListRenderItem, ListRenderItemInfo } from 'react-native';
+import { Containter, Header, TotalCars, HeaderContent, CarList, MyCarsButton } from './styles';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 import Logo from '../../assets/logo.svg';
 import { Car } from '../../components/Car';
+import { useNavigation } from '@react-navigation/native';
+import api from '../../services/api';
+import { useEffect, useState } from 'react';
+import { CarDTO } from '../../dtos/CarDTO';
+import { Load } from '../../components/Load';
+import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from 'styled-components/native';
 
 export function Home() {
 
-    const carData = {
-        brand: 'audi',
-        name: 'RS 5 Coupé',
-        rent: {
-            period: 'Ao dia',
-            price: 20.00
-        },
-        thumbnail: 'https://png.monster/wp-content/uploads/2020/11/2018-audi-rs5-4wd-coupe-angular-front-5039562b.png'
+    const [cars, setCars] = useState<CarDTO[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const theme = useTheme();
+
+    const navigation = useNavigation<any>();
+
+    function handleCarDeatails(car: CarDTO) {
+        navigation.navigate('CarDetails', { car });
     }
+
+    function handleOpenMyCars() {
+        navigation.navigate('MyCars');
+    }
+
+
+    useEffect(() => {
+        async function fetchCars() {
+            try {
+                setIsLoading(true);
+                const { data } = await api.get<CarDTO[]>('/cars');
+                setCars(data);
+            } catch (err) {
+                console.log(err);
+
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        fetchCars();
+    }, []);
 
     return (
         <Containter>
@@ -38,12 +66,27 @@ export function Home() {
                 </HeaderContent>
 
             </Header>
-            <CarList
-                data={[1, 2, 3, 6, 7, 8]}
-                keyExtractor={item => String(item)}
-                renderItem={(item) => <Car data={carData} />}
-            />
-
+            {isLoading ? <Load /> :
+                <CarList
+                    data={cars}
+                    keyExtractor={(item: CarDTO) => item.id}
+                    renderItem={({ item }: { item: CarDTO }) =>
+                        <Car
+                            data={item}
+                            onPress={() => { handleCarDeatails(item) }}
+                        />
+                    }
+                />
+            }
+            <MyCarsButton
+                onPress={handleOpenMyCars}
+            >
+                <Ionicons
+                    name="ios-car-sport"
+                    size={32}
+                    color={theme.colors.shape}
+                />
+            </MyCarsButton>
         </Containter>
     )
 }

@@ -4,13 +4,7 @@ import { Accessory } from '../../components/Acessory';
 import { BackButton } from '../../components/BackButton';
 import { ImageSlider } from '../../components/ImageSlider';
 
-import SpeedSvg from '../../assets/speed.svg'
-import AccelerationSvg from '../../assets/acceleration.svg'
-import ForceSvg from '../../assets/force.svg'
-import GasolineSvg from '../../assets/gasoline.svg'
-import ExchangeSvg from '../../assets/exchange.svg'
-import PeopleSvg from '../../assets/people.svg'
-
+import { getAccessoryIcon } from '../../utils/getAccessoryIcon';
 
 import {
     Container,
@@ -25,13 +19,27 @@ import {
     Period,
     Price,
     About,
-    Acessories,
+    Accessories,
     Footer
 } from './styles';
 import { Button } from '../../components/Button';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { CarDTO } from '../../dtos/CarDTO';
+
+interface ParamsProps {
+    car: CarDTO
+}
 
 export function CarDetails() {
+    const navigation = useNavigation<any>();
+    const route = useRoute();
+    const { car } = route.params as ParamsProps;
 
+    function handleConfirmRental() {
+        navigation.navigate('Agendamento', {
+            car
+        });
+    }
     return (
         <Container>
             <StatusBar
@@ -40,44 +48,44 @@ export function CarDetails() {
                 translucent
             />
             <Header>
-                <BackButton onPress={() => {
-                    console.log('pressionado');
-                }} />
+                <BackButton />
             </Header>
             <CarImages>
-                <ImageSlider imagesUrl={['https://png.monster/wp-content/uploads/2020/11/2018-audi-rs5-4wd-coupe-angular-front-5039562b.png']} />
+                <ImageSlider imagesUrl={car.photos} />
             </CarImages>
             <Content>
                 <Details>
                     <Description>
-                        <Brand>Lamborghini</Brand>
-                        <Name>Huracan</Name>
+                        <Brand>{car.brand}</Brand>
+                        <Name>{car.name}</Name>
                     </Description>
                     <Rent>
-                        <Period>Ao dia</Period>
-                        <Price>R$ 580</Price>
+                        <Period>{car.rent.period}</Period>
+                        <Price>{`R$ ${car.rent.price}`}</Price>
                     </Rent>
 
                 </Details>
-                <Acessories>
-                    <Accessory name='380km/h' icon={SpeedSvg} />
-                    <Accessory name='3.2s' icon={AccelerationSvg} />
-                    <Accessory name='800 HP' icon={ForceSvg} />
-                    <Accessory name='Gasolina' icon={GasolineSvg} />
-                    <Accessory name='Auto' icon={ExchangeSvg} />
-                    <Accessory name='2 pessoas' icon={PeopleSvg} />
-                </Acessories>
+                <Accessories>
+                    {
+                        car.accessories.map(item => (
+                            <Accessory
+                                key={item.type}
+                                name={item.name}
+                                icon={getAccessoryIcon(item.type)} />
+                        ))
+
+                    }
+
+                </Accessories>
 
                 <About>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur
+                    {car.about}
                 </About>
 
             </Content>
 
             <Footer>
-                <Button title='Confirm' />
+                <Button title='Escolher periodo do aluguel' onPress={handleConfirmRental} />
             </Footer>
         </Container>
     )
