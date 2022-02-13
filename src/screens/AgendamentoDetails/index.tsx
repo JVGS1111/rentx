@@ -174,7 +174,7 @@ export function AgendamentoDetails() {
                     title='Alugar agora'
                     color={theme.colors.success}
                     onPress={handleConfirmRental}
-                    enable={!loading}
+                    enabled={!loading}
                     loading={loading}
                 />
             </Footer>

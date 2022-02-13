@@ -123,7 +123,7 @@ export function Agendamentos() {
                 <Button
                     title="Confirmar"
                     onPress={handleConfirmRental}
-                    enable={!!rentalPeriod.startFormatted}
+                    enabled={!!rentalPeriod.startFormatted}
                 />
             </Footer>
         </Container>

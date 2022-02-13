@@ -1,9 +1,9 @@
 import { useState, useRef } from "react";
 import { FlatList, ViewToken } from "react-native";
+import { Bullet } from "../Bullet";
 import {
     Container,
     ImageIndexes,
-    ImageIndex,
     CarImageWrapper,
     CarImage
 } from "./styles";
@@ -30,7 +30,7 @@ export function ImageSlider({ imagesUrl }: ImageSliderProps) {
             <ImageIndexes>
                 {
                     imagesUrl.map((_, index) => (
-                        <ImageIndex
+                        <Bullet
                             key={index}
                             active={currentImage === index}
                         />
