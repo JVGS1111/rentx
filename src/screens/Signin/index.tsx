@@ -23,7 +23,7 @@ import { PasswordInput } from "../../components/PasswordInput";
 
 import * as Yup from 'yup';
 
-export function Singin() {
+export function SignIn() {
 
     const theme = useTheme();
     const [email, setEmail] = useState('');

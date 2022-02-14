@@ -29,6 +29,7 @@ export const Message = styled.Text`
     font-size: ${RFValue(15)}px;
     color:${({ theme }) => theme.colors.text_detail}; 
     font-family: ${({ theme }) => theme.fonts.primary_400};
+  
     text-align: center;
     line-height: ${RFValue(25)}px;
     padding-top: 16px;

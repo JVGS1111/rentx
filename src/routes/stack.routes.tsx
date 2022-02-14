@@ -3,12 +3,12 @@ import { createStackNavigator } from '@react-navigation/stack'
 
 import { Agendamentos } from '../screens/Agendamentos';
 import { AgendamentoDetails } from '../screens/AgendamentoDetails';
-import { AgendamentoComplete } from '../screens/AgendamentoComplete';
+import { Confirmation } from '../screens/Confirmation';
 import { CarDetails } from '../screens/CarDetails';
 import { Home } from '../screens/Home';
 import { MyCars } from '../screens/MyCars';
 import { Splash } from '../screens/Splash';
-import { Singin } from '../screens/Singin';
+import { SignIn } from '../screens/Signin';
 import { SignUpFirstStep } from '../screens/SingUp/SingUpFirstStep';
 import { SignUpSecondStep } from '../screens/SingUp/SignUpSecondStep';
 
@@ -19,11 +19,11 @@ export function StackRoutes() {
     return (
         <Navigator
             screenOptions={{ headerShown: false }}
-            initialRouteName={'Singin'}
+            initialRouteName={'Home'}
         >
             <Screen
-                name='Singin'
-                component={Singin}
+                name='SignIn'
+                component={SignIn}
             />
             <Screen
                 name='SignUpFirstStep'
@@ -57,8 +57,8 @@ export function StackRoutes() {
                 component={AgendamentoDetails}
             />
             <Screen
-                name='AgendamentoComplete'
-                component={AgendamentoComplete}
+                name='Confirmation'
+                component={Confirmation}
             />
             <Screen
                 name='MyCars'

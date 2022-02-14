@@ -90,7 +90,11 @@ export function AgendamentoDetails() {
                 endDate: rentalPeriod.end,
             })
 
-            navigation.navigate('AgendamentoComplete');
+            navigation.navigate('Confirmation', {
+                nextScreenRoute: 'Home',
+                title: 'Carro Alugado!',
+                message: `Agora você só precisa ir \naté a concessionária da RENTX \npegar o seu automóvel`
+            });
         } catch (err) {
             Alert.alert('Não foi possivel finalizar o agendamento');
             setLoading(false);
