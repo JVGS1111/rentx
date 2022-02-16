@@ -20,12 +20,13 @@ import {
 } from './styles';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { useTheme } from 'styled-components/native';
+import api from '../../../services/api';
 
 interface Params {
     user: {
         name: string;
         email: string;
-        driverLicence: string;
+        driverLicense: string;
     }
 }
 export function SignUpSecondStep() {
@@ -37,7 +38,7 @@ export function SignUpSecondStep() {
 
     const { user } = route.params as Params;
 
-    function handleRegister() {
+    async function handleRegister() {
         if (!password || !passwordConfirmed) {
             return ToastAndroid.show('Informe a senha', 3000);
         }
@@ -45,11 +46,25 @@ export function SignUpSecondStep() {
             return ToastAndroid.show('As senhas não são iguais', 3000);
         }
 
-        navigation.navigate('Confirmation', {
-            nextScreenRoute: 'SignIn',
-            title: 'Conta Criada!',
-            message: `Agora é só fazer login \n e aproveitar`
-        })
+        try {
+            await api.post('/users', {
+                name: user.name,
+                email: user.email,
+                driver_license: user.driverLicense,
+                password
+            }).then(() => {
+                navigation.navigate('Confirmation', {
+                    nextScreenRoute: 'SignIn',
+                    title: 'Conta Criada!',
+                    message: `Agora é só fazer login \n e aproveitar`
+                })
+            })
+        } catch (err) {
+            console.log(err);
+
+            ToastAndroid.show('Opa não foi possivel cadastrar', 3000)
+        };
+
     }
 
     return (

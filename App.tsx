@@ -20,6 +20,7 @@ import theme from './src/styles/theme';
 
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Routes } from './src/routes';
+import { AppProvider } from './src/hooks';
 
 
 export default function App() {
@@ -39,13 +40,12 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <GestureHandlerRootView
-        style={
-          {
-            flex: 1
-          }
-        }
-      >
-        <Routes />
+        style={{
+          flex: 1
+        }}>
+        <AppProvider>
+          <Routes />
+        </AppProvider>
       </GestureHandlerRootView>
     </ThemeProvider>
   );

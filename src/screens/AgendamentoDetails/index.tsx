@@ -62,7 +62,7 @@ export function AgendamentoDetails() {
     const { car, dates } = route.params as ParamsProps;
     const [loading, setLoading] = useState(false);
 
-    const rentTotal = Number(dates.length * car.rent.price);
+    const rentTotal = Number(dates.length * car.price);
     useEffect(() => {
         setRentalPeriod({
             start: format(getPlataformDate(new Date(dates[0])), 'dd/MM/yyyy'),
@@ -121,8 +121,8 @@ export function AgendamentoDetails() {
                         <Name>{car.name}</Name>
                     </Description>
                     <Rent>
-                        <Period>{car.rent.period}</Period>
-                        <Price>R$ {car.rent.price}</Price>
+                        <Period>{car.period}</Period>
+                        <Price>R$ {car.price}</Price>
                     </Rent>
 
                 </Details>
@@ -167,7 +167,7 @@ export function AgendamentoDetails() {
                 <RentalPrice>
                     <RentalPriceLabel>TOTAL</RentalPriceLabel>
                     <RentalPriceDetail>
-                        <RentalPriceQuota>{`R$ ${car.rent.price} x${dates.length} diárias`}</RentalPriceQuota>
+                        <RentalPriceQuota>{`R$ ${car.price} x${dates.length} diárias`}</RentalPriceQuota>
                         <RentalPriceTotal>R$ {rentTotal}</RentalPriceTotal>
                     </RentalPriceDetail>
                 </RentalPrice>
