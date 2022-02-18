@@ -10,11 +10,11 @@ export interface CarDTO {
     thumbnail: string;
     accessories:
     {
+        id: string;
         type: string;
         name: string;
     }[];
     photos: {
-        car_id: string;
         id: string;
         photo: string
     }[];

@@ -39,12 +39,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const [data, setData] = useState<AuthState>({} as AuthState);
 
     async function signIn({ email, password }: SignInCredentials) {
-        const { data } = await api.post('/session', {
+        const { data } = await api.post('/sessions', {
             email,
             password
         });
-        console.log(data);
+        const { token, user } = data;
 
+        api.defaults.headers.common[`Bearer ${token}`];
+
+        setData({
+            token,
+            user
+        });
     }
 
     return (

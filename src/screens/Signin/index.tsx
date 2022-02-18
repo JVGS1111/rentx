@@ -22,10 +22,12 @@ import { Input } from "../../components/Input";
 import { PasswordInput } from "../../components/PasswordInput";
 
 import * as Yup from 'yup';
+import { useAuth } from "../../hooks/auth";
 
 export function SignIn() {
 
     const theme = useTheme();
+    const { signIn } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigation = useNavigation<any>();
@@ -42,13 +44,16 @@ export function SignIn() {
             });
 
             await schema.validate({ email, password })
-            Alert.alert('Tudo certo!');
+
             //fazer login
+            await signIn({ email, password });
         } catch (err) {
             if (err instanceof Yup.ValidationError) {
 
                 ToastAndroid.show(`Opa!, ${err.message}`, 3000)
             } else {
+                console.log(err);
+
                 ToastAndroid.show('Erro na autenticação Ocorreu um erro ao fazer login, verifique as credenciais', 4000)
             }
         }

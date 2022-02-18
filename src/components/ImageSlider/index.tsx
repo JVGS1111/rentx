@@ -13,7 +13,6 @@ interface ImageSliderProps {
 
 }
 interface objs {
-    car_id: string;
     id: string;
     photo: string;
 }

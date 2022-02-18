@@ -14,29 +14,13 @@ import { SignUpSecondStep } from '../screens/SingUp/SignUpSecondStep';
 
 const { Navigator, Screen } = createStackNavigator();
 
-export function StackRoutes() {
+export function AppStackRoutes() {
 
     return (
         <Navigator
             screenOptions={{ headerShown: false }}
-            initialRouteName={'SignIn'}
+            initialRouteName={'Home'}
         >
-            <Screen
-                name='SignIn'
-                component={SignIn}
-            />
-            <Screen
-                name='SignUpFirstStep'
-                component={SignUpFirstStep}
-            />
-            <Screen
-                name='SignUpSecondStep'
-                component={SignUpSecondStep}
-            />
-            {/* <Screen
-                name='Splash'
-                component={Splash}
-            /> */}
             <Screen
                 name='Home'
                 component={Home}
@@ -44,6 +28,23 @@ export function StackRoutes() {
                     gestureEnabled: false,
                 }}
             />
+            {/* <Screen
+                name='SignIn'
+                component={SignIn}
+            /> */}
+            {/* <Screen
+                name='SignUpFirstStep'
+                component={SignUpFirstStep}
+            />
+            <Screen
+                name='SignUpSecondStep'
+                component={SignUpSecondStep}
+            />
+            <Screen
+                name='Splash'
+                component={Splash}
+            /> */}
+
             <Screen
                 name='CarDetails'
                 component={CarDetails}
