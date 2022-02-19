@@ -28,23 +28,6 @@ export function AppStackRoutes() {
                     gestureEnabled: false,
                 }}
             />
-            {/* <Screen
-                name='SignIn'
-                component={SignIn}
-            /> */}
-            {/* <Screen
-                name='SignUpFirstStep'
-                component={SignUpFirstStep}
-            />
-            <Screen
-                name='SignUpSecondStep'
-                component={SignUpSecondStep}
-            />
-            <Screen
-                name='Splash'
-                component={Splash}
-            /> */}
-
             <Screen
                 name='CarDetails'
                 component={CarDetails}
