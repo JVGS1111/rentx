@@ -7,10 +7,6 @@ import { Confirmation } from '../screens/Confirmation';
 import { CarDetails } from '../screens/CarDetails';
 import { Home } from '../screens/Home';
 import { MyCars } from '../screens/MyCars';
-import { Splash } from '../screens/Splash';
-import { SignIn } from '../screens/Signin';
-import { SignUpFirstStep } from '../screens/SingUp/SingUpFirstStep';
-import { SignUpSecondStep } from '../screens/SingUp/SignUpSecondStep';
 
 const { Navigator, Screen } = createStackNavigator();
 

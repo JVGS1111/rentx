@@ -13,6 +13,7 @@ import PeopleSvg from '../assets/people.svg';
 
 import { useTheme } from 'styled-components/native';
 import { Platform } from 'react-native';
+import { Profile } from '../screens/Profile';
 
 export function AppTabRoutes() {
 
@@ -33,7 +34,7 @@ export function AppTabRoutes() {
         >
 
             <Screen
-                name='Home'
+                name='HomeTab'
                 component={AppStackRoutes}
                 options={{
                     tabBarIcon: (({ color }) => (
@@ -53,7 +54,7 @@ export function AppTabRoutes() {
             />
             <Screen
                 name='Profile'
-                component={Home}
+                component={Profile}
                 options={{
                     tabBarIcon: (({ color }) => (
                         <PeopleSvg width={24} height={24} fill={color} />

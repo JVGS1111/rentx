@@ -56,6 +56,7 @@ export function PasswordInput({
                 onBlur={handleInputBlur}
                 onFocus={handleInputFocus}
                 isFocused={isFocused}
+                autoCorrect={false}
                 {...rest}
             />
             <BorderlessButton
