@@ -22,6 +22,7 @@ interface User {
 
 interface AuthContextData {
     user: User;
+    loading: Boolean;
     signIn: (credentials: SignInCredentials) => Promise<void>;
     signOut: () => Promise<void>;
     updateUser: (user: User) => Promise<void>;
@@ -40,9 +41,10 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 export function AuthProvider({ children }: AuthProviderProps) {
 
     const [data, setData] = useState<User>({} as User);
-
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         async function loadUserData() {
+            setLoading(true);
             const userCollection = database.get<ModelUser>('users');
             const response = await userCollection.query().fetch();
 
@@ -52,6 +54,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 console.log(userData);
 
                 setData(userData);
+                setLoading(false);
             }
 
         }
@@ -127,7 +130,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
             user: data,
             signIn,
             signOut,
-            updateUser
+            updateUser,
+            loading
         }}>
             {children}
         </AuthContext.Provider>

@@ -34,10 +34,11 @@ import {
 
 
 import { CarDTO } from '../../dtos/CarDTO';
+import { Car as ModelCar } from '../../database/models/Car';
 
 
 interface ParamsProps {
-    car: CarDTO
+    car: ModelCar
 }
 
 export function CarDetails() {
@@ -45,6 +46,8 @@ export function CarDetails() {
     const navigation = useNavigation<any>();
     const route = useRoute();
     const { car } = route.params as ParamsProps;
+    console.log(car);
+
     const scrollY = useSharedValue(0);
     const theme = useTheme();
     const scrollHandler = useAnimatedScrollHandler(event => {
@@ -97,7 +100,7 @@ export function CarDetails() {
                     style={sliderCarsStyleAnimation}
                 >
                     <CarImages>
-                        <ImageSlider imagesUrl={car.photos} />
+                        {/* <ImageSlider imagesUrl={car.} /> */}
                     </CarImages>
 
                 </Animated.View>
@@ -124,7 +127,7 @@ export function CarDetails() {
 
                 </Details>
                 <Accessories>
-                    {
+                    {/* {
                         car.accessories.map(item => (
                             <Accessory
                                 key={item.type}
@@ -132,7 +135,7 @@ export function CarDetails() {
                                 icon={getAccessoryIcon(item.type)} />
                         ))
 
-                    }
+                    } */}
 
                 </Accessories>
 
