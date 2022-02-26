@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { StatusBar } from 'react-native';
 
 import { Containter, Header, TotalCars, HeaderContent, CarList } from './styles';
@@ -13,16 +13,19 @@ import { useNavigation } from '@react-navigation/native';
 
 import api from '../../services/api';
 import { CarDTO } from '../../dtos/CarDTO';
-
+import { Car as ModelCar } from '../../database/models/Car';
+import { synchronize } from '@nozbe/watermelondb/sync'
+import { database } from '../../database';
+import { useNetInfo } from '@react-native-community/netinfo';
 
 export function Home() {
 
-    const [cars, setCars] = useState<CarDTO[]>([]);
+    const [cars, setCars] = useState<ModelCar[]>([]);
     const [isLoading, setIsLoading] = useState(false);
-
+    const netInfo = useNetInfo();
     const navigation = useNavigation<any>();
-
-    function handleCarDeatails(car: CarDTO) {
+    const synchronizing = useRef(false);
+    function handleCarDeatails(car: ModelCar) {
         navigation.navigate('CarDetails', { car });
     }
 
@@ -31,22 +34,22 @@ export function Home() {
         let isMounted = true;
         async function fetchCars() {
             try {
-                setIsLoading(true);
-                const { data } = await api.get<CarDTO[]>('/cars');
+                const carCollection = database.get<ModelCar>('cars');
+                const cars = await carCollection.query().fetch();
+
 
                 if (isMounted) {
-                    setCars(data);
+                    setCars(cars);
                 }
-            } catch (err) {
-                console.log(err);
-
+            } catch (error) {
+                console.log(error);
             } finally {
                 if (isMounted) {
                     setIsLoading(false);
                 }
             }
-
         }
+
         fetchCars();
 
         return () => {
@@ -54,6 +57,45 @@ export function Home() {
         }
     }, []);
 
+    useEffect(() => {
+        const syncChanges = async () => {
+            if (netInfo.isConnected && !synchronizing.current) {
+                synchronizing.current = true;
+                try {
+                    await offlineSynchronize(); //Watermelon
+                }
+                catch (err) {
+                    console.log(err);
+                }
+                finally {
+                    synchronizing.current = false;
+                }
+            }
+        }
+
+        syncChanges();
+    }, [netInfo.isConnected]);
+
+
+    async function offlineSynchronize() {
+        await synchronize({
+            database,
+            pullChanges: async ({ lastPulledAt }) => {
+                const response = await api
+                    .get(`cars/sync/pull?lastPulledVersion=${lastPulledAt || 0}`);
+
+                const { changes, latestVersion } = response.data;
+                console.log('back para app', changes);
+
+                return { changes, timestamp: latestVersion }
+            },
+            pushChanges: async ({ changes }) => {
+                const user = changes.users;
+
+                await api.post('/users/sync', user);
+            },
+        });
+    }
     return (
         <Containter>
             <StatusBar
@@ -66,6 +108,7 @@ export function Home() {
                     <Logo
                         width={RFValue(108)}
                         height={RFValue(12)}
+                        onPress={offlineSynchronize}
                     />
                     {
                         !isLoading && (
@@ -79,8 +122,8 @@ export function Home() {
             {isLoading ? <LoadAnimated /> :
                 <CarList
                     data={cars}
-                    keyExtractor={(item: CarDTO) => item.id}
-                    renderItem={({ item }: { item: CarDTO }) =>
+                    keyExtractor={(item: ModelCar) => item.id}
+                    renderItem={({ item }: { item: ModelCar }) =>
                         <Car
                             data={item}
                             onPress={() => { handleCarDeatails(item) }}
