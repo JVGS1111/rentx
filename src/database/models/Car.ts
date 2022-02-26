@@ -1,7 +1,6 @@
 import { Model } from '@nozbe/watermelondb';
 import { field } from '@nozbe/watermelondb/decorators';
 
-
 class Car extends Model {
     static table = 'cars'
 
@@ -25,7 +24,6 @@ class Car extends Model {
 
     @field('thumbnail')
     thumbnail!: string;
-
 }
 
 export { Car }

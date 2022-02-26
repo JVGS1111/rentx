@@ -12,9 +12,11 @@ export function Routes() {
     console.log(!!user);
 
     return (
-        loading ? <LoadAnimated /> :
+        loading ? <LoadAnimated /> : (
             <NavigationContainer>
                 {user.token ? <AppTabRoutes /> : <AuthRoutes />}
             </NavigationContainer>
+        )
+
     )
 }
