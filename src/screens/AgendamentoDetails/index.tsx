@@ -45,6 +45,9 @@ import {
 
 import { getPlataformDate } from '../../utils/getPlataformDate';
 import api from '../../services/api';
+import { useNetInfo } from '@react-native-community/netinfo';
+import date from '@nozbe/watermelondb/decorators/date';
+import { useAuth } from '../../hooks/auth';
 interface ParamsProps {
     car: CarDTO;
     dates: string[];
@@ -56,38 +59,46 @@ interface RentalPeriod {
 }
 
 export function AgendamentoDetails() {
+    const [carUpdate, setCarUpdate] = useState<CarDTO>({} as CarDTO);
     const navigation = useNavigation<any>();
     const route = useRoute();
     const [rentalPeriod, setRentalPeriod] = useState<RentalPeriod>({} as RentalPeriod)
     const { car, dates } = route.params as ParamsProps;
     const [loading, setLoading] = useState(false);
-
+    const netInfo = useNetInfo();
     const rentTotal = Number(dates.length * car.price);
+    const { user } = useAuth();
     useEffect(() => {
         setRentalPeriod({
             start: format(getPlataformDate(new Date(dates[0])), 'dd/MM/yyyy'),
             end: format(getPlataformDate(new Date(dates[dates.length - 1])), 'dd/MM/yyyy')
         })
     }, []);
+    useEffect(() => {
+        async function fetchOnlineData() {
+            const response = await api.get(`cars/${car.id}`);
+            setCarUpdate(response.data);
+        }
+
+        if (netInfo.isConnected === true) {
+            fetchOnlineData();
+        }
+    }, [netInfo.isConnected])
 
     async function handleConfirmRental() {
-        const agendamentoByCar = await api.get(`/schedules_bycars/${car.id}`);
 
-        const unavailable_dates = [
-            ...agendamentoByCar.data.unavailable_dates,
-            ...dates,
-        ]
         try {
+
             setLoading(true);
-            await api.put(`/schedules_bycars/${car.id}`, {
-                id: car.id,
-                unavailable_dates
-            })
-            await api.post(`/schedules_byuser`, {
+            api.defaults.headers.common = {
+                Authorization: `bearer ${user.token}`,
+            }
+            await api.post(`rentals`, {
                 user_id: 1,
-                car,
-                startDate: rentalPeriod.start,
-                endDate: rentalPeriod.end,
+                car_id: car.id,
+                start_date: new Date(dates[0]),
+                end_date: new Date(dates[dates.length - 1]),
+                total: rentTotal
             })
 
             navigation.navigate('Confirmation', {
@@ -96,6 +107,8 @@ export function AgendamentoDetails() {
                 message: `Agora você só precisa ir \naté a concessionária da RENTX \npegar o seu automóvel`
             });
         } catch (err) {
+            console.log(err);
+
             Alert.alert('Não foi possivel finalizar o agendamento');
             setLoading(false);
         }
@@ -112,7 +125,12 @@ export function AgendamentoDetails() {
                 <BackButton />
             </Header>
             <CarImages>
-                <ImageSlider imagesUrl={car.photos} />
+                <ImageSlider
+                    imagesUrl={
+                        !!carUpdate.photos ?
+                            carUpdate.photos : [{ id: car.thumbnail, photo: car.thumbnail }]
+                    }
+                />
             </CarImages>
             <Content>
                 <Details>
@@ -128,13 +146,18 @@ export function AgendamentoDetails() {
                 </Details>
                 <Accessories>
                     {
-                        car.accessories.map(item => (
-                            <Accessory
-                                key={item.type}
-                                name={item.name}
-                                icon={getAccessoryIcon(item.type)}
-                            />
-                        ))
+                        car.accessories &&
+                        <Accessories>
+                            {
+                                carUpdate.accessories.map(accessory => (
+                                    <Accessory
+                                        key={accessory.type}
+                                        name={accessory.name}
+                                        icon={getAccessoryIcon(accessory.type)}
+                                    />
+                                ))
+                            }
+                        </Accessories>
                     }
 
                 </Accessories>

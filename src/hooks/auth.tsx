@@ -49,7 +49,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
             if (response.length > 0) {
                 const userData = response[0]._raw as unknown as User;
-                api.defaults.headers.common[`Bearer ${userData.token}`];
+                api.defaults.headers.common = {
+                    Authorization: `bearer ${userData.token}`,
+                }
                 console.log(userData);
 
                 setData(userData);
@@ -57,6 +59,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             }
 
         }
+        setLoading(false);
         loadUserData();
     }, [])
 
@@ -69,8 +72,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
             });
             const { token, user } = data;
 
-            api.defaults.headers.common[`Bearer ${token}`];
-
+            api.defaults.headers.common = {
+                Authorization: `bearer ${token}`,
+            }
             const userCollection = database.get<ModelUser>('users');
             await database.write(async () => {
                 await userCollection.create((newUser) => {
