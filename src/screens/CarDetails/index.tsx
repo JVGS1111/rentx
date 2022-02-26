@@ -174,7 +174,11 @@ export function CarDetails() {
             </Animated.ScrollView>
 
             <Footer>
-                <Button title='Escolher periodo do aluguel' onPress={handleConfirmRental} />
+                <Button
+                    title='Escolher periodo do aluguel'
+                    onPress={handleConfirmRental}
+                    enabled={netInfo.isConnected === true}
+                />
                 {
                     netInfo.isConnected === false &&
                     <OfflineInfo>

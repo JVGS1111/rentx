@@ -31,6 +31,8 @@ import { BackButton } from "../../components/BackButton";
 import { Input } from "../../components/Input";
 import { PasswordInput } from '../../components/PasswordInput'
 import { Button } from "../../components/Button";
+import { useNetInfo } from "@react-native-community/netinfo";
+import SimpleToast from "react-native-simple-toast";
 
 
 type optionProps = 'dataEdit' | 'passwordEdit';
@@ -44,9 +46,12 @@ export function Profile() {
     const [driverLicense, setDriverLicense] = useState(user.driver_license);
 
     const theme = useTheme();
-
+    const netInfo = useNetInfo();
 
     function handleOptionChange(optionSelected: optionProps) {
+        if (!netInfo.isConnected === true && optionSelected === 'passwordEdit') {
+            return SimpleToast.show(`Não é possivel atualizar offline`, 3000);
+        }
         setOption(optionSelected);
     }
 
